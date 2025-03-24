@@ -22,14 +22,14 @@ cd LMS-App
 
 Ensure you have Flutter installed. If not, follow the [Flutter installation guide](https://docs.flutter.dev/get-started/install).
 
-1. **Install dependencies**  
+1. **Install dependencies**\
    Run the following command to install all required dependencies:
 
    ```sh
    flutter pub get
    ```
 
-2. **Run the app**  
+2. **Run the app**\
    Use this command to launch the application on an emulator or a connected device:
 
    ```sh
@@ -40,10 +40,16 @@ Ensure you have Flutter installed. If not, follow the [Flutter installation guid
 
 - Make sure you have an emulator running or a physical device connected.
 - You may need to configure your Flutter environment by running:
-
   ```sh
   flutter doctor
   ```
 
 For more details, refer to the [Flutter documentation](https://docs.flutter.dev/).
+
+3. **Run on Chrome (Optional)**\
+   If you prefer to run the app in a web browser, use the following command:
+
+   ```sh
+   flutter run -d chrome
+   ```
 
