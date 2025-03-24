@@ -1,16 +1,49 @@
-# lms_app
+# LMS App
 
-A new Flutter project.
+A Learning Management System (LMS) built using Flutter.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Clone the Repository
 
-A few resources to get you started if this is your first Flutter project:
+To get a copy of this project, run the following command in your terminal:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+```sh
+git clone https://github.com/Ruhul-bot/LMS-App.git
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Then, navigate to the project directory:
+
+```sh
+cd LMS-App
+```
+
+### Setup & Run
+
+Ensure you have Flutter installed. If not, follow the [Flutter installation guide](https://docs.flutter.dev/get-started/install).
+
+1. **Install dependencies**  
+   Run the following command to install all required dependencies:
+
+   ```sh
+   flutter pub get
+   ```
+
+2. **Run the app**  
+   Use this command to launch the application on an emulator or a connected device:
+
+   ```sh
+   flutter run
+   ```
+
+### Additional Notes
+
+- Make sure you have an emulator running or a physical device connected.
+- You may need to configure your Flutter environment by running:
+
+  ```sh
+  flutter doctor
+  ```
+
+For more details, refer to the [Flutter documentation](https://docs.flutter.dev/).
+
