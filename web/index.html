@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="lms_app">
+  <meta name="google-signin-client_id" content="181705743814-smacbcspn69719fcfp3k3n9rcnq3i7r5.apps.googleusercontent.com">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png"/>
+  <title>lms_app</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Load critical external scripts synchronously in head -->
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="https://accounts.google.com/gsi/client"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
+</head>
+<body>
+  <!-- Firebase Initialization -->
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBP_4UjNKZRYDzkY7I7o6EAnpQCKJnzazY",
+      authDomain: "lms-flutter-app-10.firebaseapp.com",
+      projectId: "lms-flutter-app-10",
+      storageBucket: "lms-flutter-app-10.firebasestorage.app",
+      messagingSenderId: "181705743814",
+      appId: "1:181705743814:web:b86e83be1a8624ffe326c7"
+    };
+    
+    // Initialize Firebase with error handling
+    try {
+      const firebaseApp = firebase.initializeApp(firebaseConfig);
+      console.log("Firebase initialized successfully");
+      
+      // Initialize Firestore with settings and error handling
+      try {
+        const db = firebase.firestore();
+        db.settings({
+          cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED,
+          ignoreUndefinedProperties: true,
+          experimentalForceLongPolling: true, // Use long polling instead of WebSockets
+          experimentalAutoDetectLongPolling: true
+        });
+        console.log("Firestore initialized successfully");
+        
+        // Test Firestore connection
+        db.collection('users').limit(1).get()
+          .then(() => {
+            console.log("Firestore connection test successful");
+          })
+          .catch(error => {
+            console.error("Firestore connection test failed:", error);
+          });
+      } catch (firestoreError) {
+        console.error("Error initializing Firestore:", firestoreError);
+      }
+      
+      // Initialize Analytics
+      try {
+        firebase.analytics();
+        console.log("Firebase Analytics initialized successfully");
+      } catch (analyticsError) {
+        console.error("Error initializing Firebase Analytics:", analyticsError);
+      }
+      
+      // Enable Firestore logging for debugging
+      firebase.firestore.setLogLevel('debug');
+    } catch (firebaseError) {
+      console.error("Error initializing Firebase:", firebaseError);
+    }
+  </script>
+
+  <!-- Google API and Token Handling -->
+  <script>
+    // Initialize Google API client with async/await
+    async function initGoogleApiClient() {
+      if (typeof gapi === 'undefined') {
+        console.warn("Google API not available yet, retrying in 1 second");
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return initGoogleApiClient();
+      }
+      await new Promise(resolve => gapi.load('client:auth2', resolve));
+      try {
+        await gapi.client.init({
+          apiKey: "AIzaSyBP_4UjNKZRYDzkY7I7o6EAnpQCKJnzazY",
+          clientId: "181705743814-smacbcspn69719fcfp3k3n9rcnq3i7r5.apps.googleusercontent.com",
+          scope: "email profile https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid",
+          plugin_name: "lms_app"
+        });
+        console.log("Google API client initialized successfully");
+        if (window.pendingAuthToken) {
+          gapi.client.setToken(window.pendingAuthToken);
+          console.log("Set pending token to gapi.client");
+          window.pendingAuthToken = null;
+        }
+      } catch (error) {
+        console.error("Error initializing Google API client:", error);
+      }
+    }
+
+    // Handle Google Sign-In credential response
+    window.handleCredentialResponse = async function(response) {
+      if (response && response.credential) {
+        window.googleSignInToken = response.credential;
+        if (response.access_token) {
+          const token = {
+            access_token: response.access_token,
+            token_type: response.token_type || 'Bearer',
+            expires_in: response.expires_in || 3600
+          };
+          if (typeof gapi !== 'undefined' && gapi.client) {
+            try {
+              gapi.client.setToken(token);
+              console.log("Successfully set token to gapi.client");
+            } catch (error) {
+              console.error("Error setting token to gapi.client:", error);
+              window.pendingAuthToken = token;
+            }
+          } else {
+            console.log("gapi.client not ready, storing token for later");
+            window.pendingAuthToken = token;
+          }
+        }
+        if (window.flutter_inappwebview) {
+          window.flutter_inappwebview.callHandler('handleGoogleSignInToken', response.credential);
+        } else {
+          console.log("Flutter app not ready to receive token");
+        }
+      }
+    };
+
+    // Function for Flutter to retrieve the token
+    window.getGoogleSignInToken = function() {
+      return window.googleSignInToken || null;
+    };
+
+    // Event listener for messages from Flutter
+    window.addEventListener('message', function(event) {
+      if (event.origin !== window.location.origin) return;
+      if (event.data && event.data.type === 'google_sign_in_token') {
+        console.log('Received Google Sign-In token from Flutter');
+        window.googleSignInToken = event.data.token;
+      }
+    });
+
+    // Initialize on window load
+    window.onload = function() {
+      initGoogleApiClient();
+    };
+  </script>
+
+  <!-- Load Flutter bootstrap script asynchronously -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
