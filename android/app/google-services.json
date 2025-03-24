@@ -12,7 +12,12 @@
           "package_name": "com.example.lms_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "181705743814-smacbcspn69719fcfp3k3n9rcnq3i7r5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCe-NY5-LPttUEzIVW1fV6SHXZBYhgB8GU"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "181705743814-smacbcspn69719fcfp3k3n9rcnq3i7r5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "181705743814-mbbhhhgl60bugq212dfs6rt4pa82jc8q.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lmsApp"
+              }
+            }
+          ]
         }
       }
     }
